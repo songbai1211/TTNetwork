@@ -9,7 +9,7 @@
 #import <PINCache/PINCache.h>
 #import "ReactiveCocoa.h"
 
-extern NSString *const TTNetworkCahcesErrorDomain ;
+extern NSString *const TTNetworkCahcesErrorDomain;
 
 
 @interface PINCache (RACSignalSupport)

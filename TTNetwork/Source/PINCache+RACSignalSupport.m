@@ -26,7 +26,6 @@ NSString *const  TTNetworkCahcesErrorDomain = @"TTNetworkCahcesErrorDomain";
                         [subscriber sendNext:object];
                         [subscriber sendCompleted];
                     } else {
-                        
                         NSDictionary *userInfo = @{NSLocalizedDescriptionKey: @"没有缓存"};
                         NSError *error = [NSError errorWithDomain:@"TTNetworkCahces" code:0 userInfo:userInfo];
                         [subscriber sendError:error];

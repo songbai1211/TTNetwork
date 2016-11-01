@@ -9,9 +9,6 @@
 #import <Foundation/Foundation.h>
 #import "ReactiveCocoa.h"
 
-extern NSString const *TTRequsetPageSize;
-extern NSString const *TTRequsetPageIndex;
-
 
 @interface TTBaseViewModel : NSObject
 

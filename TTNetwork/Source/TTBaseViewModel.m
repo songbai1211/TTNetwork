@@ -8,8 +8,6 @@
 
 #import "TTBaseViewModel.h"
 
- NSString const *TTRequsetPageSize = @"TTRequsetPageSize";
- NSString const *TTRequsetPageIndex = @"TTRequsetPageIndex";
 
 @interface TTBaseViewModel ()
 
