@@ -20,6 +20,7 @@
 		2E2A36A61D5F77BD00F68072 /* TTBaseViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A369D1D5F77BD00F68072 /* TTBaseViewModel.m */; };
 		2E2A36A71D5F77BD00F68072 /* TTHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A369F1D5F77BD00F68072 /* TTHTTPClient.m */; };
 		2E2A36A81D5F77BD00F68072 /* TTOldService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A36A11D5F77BD00F68072 /* TTOldService.m */; };
+		2E2E6BB81DC8A28D00D595A2 /* PINCache+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E6BB71DC8A28D00D595A2 /* PINCache+RACSignalSupport.m */; };
 		8A7D758B699529B36F80982A /* libPods-TTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CBC90CE85DEE93121397C7D2 /* libPods-TTNetwork.a */; };
 /* End PBXBuildFile section */
 
@@ -48,6 +49,8 @@
 		2E2A369F1D5F77BD00F68072 /* TTHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTHTTPClient.m; sourceTree = "<group>"; };
 		2E2A36A01D5F77BD00F68072 /* TTOldService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOldService.h; sourceTree = "<group>"; };
 		2E2A36A11D5F77BD00F68072 /* TTOldService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOldService.m; sourceTree = "<group>"; };
+		2E2E6BB61DC8A28D00D595A2 /* PINCache+RACSignalSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PINCache+RACSignalSupport.h"; sourceTree = "<group>"; };
+		2E2E6BB71DC8A28D00D595A2 /* PINCache+RACSignalSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PINCache+RACSignalSupport.m"; sourceTree = "<group>"; };
 		718E454CAEE99316AD181669 /* Pods-TTNetwork.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTNetwork.release.xcconfig"; path = "Pods/Target Support Files/Pods-TTNetwork/Pods-TTNetwork.release.xcconfig"; sourceTree = "<group>"; };
 		7C1CE104A5E910EFA841B873 /* Pods-TTNetwork.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTNetwork.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TTNetwork/Pods-TTNetwork.debug.xcconfig"; sourceTree = "<group>"; };
 		CBC90CE85DEE93121397C7D2 /* libPods-TTNetwork.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TTNetwork.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -111,6 +114,8 @@
 		2E2A36931D5F77AC00F68072 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2E2E6BB61DC8A28D00D595A2 /* PINCache+RACSignalSupport.h */,
+				2E2E6BB71DC8A28D00D595A2 /* PINCache+RACSignalSupport.m */,
 				2E2A36961D5F77BD00F68072 /* TTAPIModel.h */,
 				2E2A36971D5F77BD00F68072 /* TTAPIModel.m */,
 				2E2A36941D5F77BD00F68072 /* TTAPIBaseModel.h */,
@@ -242,7 +247,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		E41F0F17D24B8493CD7F468B /* [CP] Copy Pods Resources */ = {
@@ -270,6 +275,7 @@
 				2E2A36A41D5F77BD00F68072 /* TTAPIParamsGenerator.m in Sources */,
 				2E2A36A71D5F77BD00F68072 /* TTHTTPClient.m in Sources */,
 				2E2A36841D5F777B00F68072 /* ViewController.m in Sources */,
+				2E2E6BB81DC8A28D00D595A2 /* PINCache+RACSignalSupport.m in Sources */,
 				2E2A36A21D5F77BD00F68072 /* TTAPIBaseModel.m in Sources */,
 				2E2A36A61D5F77BD00F68072 /* TTBaseViewModel.m in Sources */,
 				2E2A36811D5F777B00F68072 /* AppDelegate.m in Sources */,

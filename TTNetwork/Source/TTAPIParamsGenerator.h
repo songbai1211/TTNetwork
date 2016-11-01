@@ -12,6 +12,7 @@
 
 + (NSDictionary *)commonParamsDictionary;
 + (NSDictionary *)paramsDictionaryGenerator:(NSDictionary *)params methodName:(NSString *)methodName;
++ (NSString *)cacheKeyGenerator:(NSDictionary *)params methodName:(NSString *)methodName;
 
 
 @end

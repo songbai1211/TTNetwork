@@ -5,5 +5,6 @@ target "TTNetwork" do
 pod 'AFNetworking', '~> 3.0'
 pod 'JSONModel'
 pod 'ReactiveCocoa', '~>2.5'
+pod 'PINCache'
 
 end

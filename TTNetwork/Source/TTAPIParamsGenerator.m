@@ -7,7 +7,6 @@
 //
 
 #import "TTAPIParamsGenerator.h"
-#import "UIDevice+TTKit.h"
 
 
 @implementation TTAPIParamsGenerator
@@ -24,6 +23,11 @@
     
     
     return paramsDic;
+}
+
++ (NSString *)cacheKeyGenerator:(NSDictionary *)params methodName:(NSString *)methodName
+{
+    return @"";
 }
 
 @end

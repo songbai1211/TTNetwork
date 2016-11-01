@@ -51,21 +51,15 @@
 {
     NSDictionary *encryptedPara = [TTAPIParamsGenerator paramsDictionaryGenerator:params methodName:methodName];
     
- 
-    
     self.activityCount++;
     NSURLSessionDataTask *dataTask = [self POST:methodName parameters:encryptedPara progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         self.activityCount--;
 
         
-        DLog(@"%@", [responseObject description]);
         success?success(task, responseObject):nil;
     } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
         self.activityCount--;
 
-        if (error.code == NSURLErrorCancelled) {
-            return ;
-        }
         failure?failure(task, error):nil;
     }];
     return dataTask;
