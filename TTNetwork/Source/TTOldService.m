@@ -96,7 +96,8 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
     NSString *cacheKey = [TTAPIParamsGenerator cacheKeyGenerator:params methodName:methodName];
     
     RACSignal *cacheSignal = [[[TTOldService cacheManager] cacheObjectForKey:cacheKey] catchTo:[RACSignal empty]];
-    RACSignal *remoteSignal = [[self rac_PostWithParams:params methodName:methodName] flattenMap:^RACStream *(id value) {
+
+    RACSignal *remoteSignal = [[self rac_PostWithParams:params methodName:methodName] flattenMap:^__kindof RACSignal * _Nullable(id  _Nullable value) {
         if (value) {
             [[TTOldService cacheManager]  setObject:value forKey:cacheKey block:^(PINCache * _Nonnull cache, NSString * _Nonnull key, id  _Nullable object) {
                 
