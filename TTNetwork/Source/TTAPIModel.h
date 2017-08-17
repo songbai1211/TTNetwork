@@ -9,7 +9,7 @@
 #import <JSONModel/JSONModel.h>
 
 typedef NS_ENUM(NSInteger, TTNetWorkState){
-    TTNetWorkStateOK = 0,         //正常
+    TTNetWorkStateOK = 200,         //正常
 };
 
 
@@ -22,7 +22,7 @@ typedef NS_ENUM(NSInteger, TTNetWorkState){
 /**
  *  状态值
  */
-@property (nonatomic, copy) NSString *returnCode;
+@property (nonatomic, copy) NSString *code;
 
 /**
  *  错误信息

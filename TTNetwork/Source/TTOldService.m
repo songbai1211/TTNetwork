@@ -18,73 +18,47 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
 
 @property (nonatomic, strong) NSMutableDictionary<NSNumber*, NSURLSessionDataTask*> *tasks;
 
+@property (nonatomic, copy) void (^ttServiceSuccessHanlder)(id<RACSubscriber> subscriber, id responseObject);
+@property (nonatomic, copy) void (^ttServiceFailureHanlder)(id<RACSubscriber> subscriber, NSError *error);
+
 @end
 
 @implementation TTOldService
 
-- (NSNumber *)PostWithParams:(NSDictionary *)params  methodName:(NSString * )methodName success:(void(^)(NSDictionary *response))success failure:(void (^)(NSError *error))failure
+- (instancetype)init
 {
-
-    NSURLSessionDataTask *dataTask = [[TTHTTPClient shareClient] PostWithParams:params methodName:methodName success:^(NSURLSessionDataTask * _Nullable task, id  _Nullable responseObject) {
-       
-        if ([responseObject isKindOfClass:[NSDictionary class]]) {
-            TTAPIBaseModel *baseModel = [[TTAPIBaseModel alloc] initWithDictionary:responseObject error:nil];
-            if (baseModel.responseMsg.returnCode.integerValue == TTNetWorkStateOK) {
-                success(responseObject);
+    self = [super init];
+    if (self) {
+        self.ttServiceSuccessHanlder = ^(id<RACSubscriber> subscriber, id responseObject) {
+            if ([responseObject isKindOfClass:[NSDictionary class]]) {
+                TTAPIBaseModel *baseModel = [[TTAPIBaseModel alloc] initWithDictionary:responseObject error:nil];
+                if (baseModel.status.code.integerValue == TTNetWorkStateOK) {
+                    [subscriber sendNext:responseObject];
+                    [subscriber sendCompleted];
+                }
+                else{
+                    NSDictionary *userInfo = @{NSLocalizedDescriptionKey: baseModel.status.message};
+                    NSError *error = [NSError errorWithDomain:TTOldServiceErrorDomain code:baseModel.status.code.integerValue userInfo:userInfo];
+                    [subscriber sendError:error];
+                }
             }
-            else{
-                NSDictionary *userInfo = @{NSLocalizedDescriptionKey: baseModel.responseMsg.message};
-                NSError *error = [NSError errorWithDomain:TTOldServiceErrorDomain code:baseModel.responseMsg.returnCode.integerValue userInfo:userInfo];
-                failure(error);
-            }
-        }
-       
-       [self.tasks removeObjectForKey:@(task.taskIdentifier)];
-       
-    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nullable error) {
-        failure(error);
-        [self.tasks removeObjectForKey:@(task.taskIdentifier)];
-    }];
-    
-    if (dataTask) {
-        [self.tasks setObject:dataTask forKey:@(dataTask.taskIdentifier)];
+        };
+        
+        self.ttServiceFailureHanlder = ^(id<RACSubscriber> subscriber, NSError *error) {
+            [subscriber sendError:error];
+        };
     }
-    
-    return @(dataTask.taskIdentifier);
+    return self;
+}
+
+- (RACSignal *)rac_GetWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
+{
+    return [self RequsetHttpType:TTHTTPMethodGET params:params methodName:methodName];
 }
 
 - (RACSignal *)rac_PostWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
 {
-    return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
-       NSURLSessionDataTask *dataTask = [[TTHTTPClient shareClient] PostWithParams:params methodName:methodName success:^(NSURLSessionDataTask * _Nullable task, id  _Nullable responseObject) {
-           
-           if ([responseObject isKindOfClass:[NSDictionary class]]) {
-               TTAPIBaseModel *baseModel = [[TTAPIBaseModel alloc] initWithDictionary:responseObject error:nil];
-               if (baseModel.responseMsg.returnCode.integerValue == TTNetWorkStateOK) {
-                   [subscriber sendNext:responseObject];
-                   [subscriber sendCompleted];
-               }
-               else{
-                   NSDictionary *userInfo = @{NSLocalizedDescriptionKey: baseModel.responseMsg.message};
-                   NSError *error = [NSError errorWithDomain:TTOldServiceErrorDomain code:baseModel.responseMsg.returnCode.integerValue userInfo:userInfo];
-                   [subscriber sendError:error];
-               }
-           }
-
-           
-       } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nullable error) {
-           [subscriber sendError:error];
-       }];
-        
-        return [RACDisposable disposableWithBlock:^{
-            [dataTask cancel];
-        }];
-    }] catch:^RACSignal *(NSError *error) {
-        if (error.code == NSURLErrorCancelled) {
-            return [RACSignal empty];
-        }
-        return [RACSignal error:error];
-    }];;
+    return [self RequsetHttpType:TTHTTPMethodPOST params:params methodName:methodName];
 }
 
 - (RACSignal *)rac_PostWithParams:(NSDictionary *)params  methodName:(NSString * )methodName needCache:(BOOL)needCache
@@ -109,23 +83,32 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
     return [RACSignal merge:@[[cacheSignal takeUntil:remoteSignal], remoteSignal]];
 }
 
-- (void)cancelAllTasks
+- (RACSignal *)RequsetHttpType:(TTHTTPMethodType)httpType params:(NSDictionary *)params  methodName:(NSString * )methodName
 {
-    for (NSURLSessionDataTask *task in self.tasks) {
-        [task cancel];
-        [self.tasks removeObjectForKey:@(task.taskIdentifier)];
-    }
+    return [[RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        NSURLSessionDataTask *dataTask = [[TTHTTPClient shareClient] RequsetHttpType:httpType params:params methodName:methodName success:^(NSURLSessionDataTask * _Nullable task, id  _Nullable responseObject) {
+            if (self.ttServiceSuccessHanlder) {
+                self.ttServiceSuccessHanlder(subscriber, responseObject);
+            }
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nullable error) {
+            if (self.ttServiceFailureHanlder) {
+                self.ttServiceFailureHanlder(subscriber, error);
+            }
+        }];
+        
+        return [RACDisposable disposableWithBlock:^{
+            [dataTask cancel];
+        }];
+    }] catch:^RACSignal *(NSError *error) {
+        if (error.code == NSURLErrorCancelled) {
+            return [RACSignal empty];
+        }
+        return [RACSignal error:error];
+    }];
 }
+
 
 #pragma mark -- Setter && Getter
-- (NSMutableDictionary *)tasks
-{
-    if (!_tasks) {
-        _tasks = [@{} mutableCopy];
-    }
-    return _tasks;
-}
-
 + (PINCache *)cacheManager
 {
     static PINCache *cache;

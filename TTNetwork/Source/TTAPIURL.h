@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-extern NSString *const YXBaseURL;
+extern NSString *const NHCBaseURL;
 
 

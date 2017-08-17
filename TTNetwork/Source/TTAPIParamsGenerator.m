@@ -11,6 +11,15 @@
 
 @implementation TTAPIParamsGenerator
 
++ (NSDictionary *)commonHeaderDictionary
+{
+    return @{@"clientType": @"iOS",
+             @"appVersion": @"1",
+             @"mobileId" : @"1",
+             @"deviceName" : @"1"
+             };
+}
+
 + (NSDictionary *)commonParamsDictionary
 {
 
@@ -20,7 +29,7 @@
 + (NSDictionary *)paramsDictionaryGenerator:(NSDictionary *)params methodName:(NSString *)methodName
 {
     NSMutableDictionary *paramsDic = [[TTAPIParamsGenerator commonParamsDictionary] mutableCopy];
-    
+    [paramsDic addEntriesFromDictionary:params];
     
     return paramsDic;
 }

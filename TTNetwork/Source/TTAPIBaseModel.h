@@ -11,6 +11,6 @@
 
 @interface TTAPIBaseModel : JSONModel
 
-@property (nonatomic, copy) TTAPIModel *responseMsg;
+@property (nonatomic, copy) TTAPIModel *status;
 
 @end

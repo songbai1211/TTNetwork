@@ -8,5 +8,5 @@
 
 #import "TTAPIURL.h"
 
- NSString *const YXBaseURL = @"";
+ NSString *const NHCBaseURL = @"";
 
