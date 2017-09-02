@@ -7,7 +7,6 @@
 //
 
 #import <PINCache/PINCache.h>
-#import "ReactiveCocoa.h"
 
 extern NSString *const TTNetworkCahcesErrorDomain;
 

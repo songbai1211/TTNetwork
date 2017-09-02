@@ -7,7 +7,6 @@
 //
 
 #import "TTHTTPClient.h"
-#import "ReactiveCocoa.h"
 #import "TTAPIParamsGenerator.h"
 #import "TTAPIURL.h"
 
