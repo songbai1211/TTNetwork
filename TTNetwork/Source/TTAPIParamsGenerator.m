@@ -7,16 +7,17 @@
 //
 
 #import "TTAPIParamsGenerator.h"
-
+#import "UIDevice+TTNetworkingMethods.h"
 
 @implementation TTAPIParamsGenerator
 
 + (NSDictionary *)commonHeaderDictionary
 {
-    return @{@"clientType": @"iOS",
-             @"appVersion": @"1",
-             @"mobileId" : @"1",
-             @"deviceName" : @"1"
+    return @{@"clientType": [UIDevice tt_ostype],
+             @"appVersion": [UIDevice tt_appversion],
+             @"mobileId" :  [UIDevice tt_uuid],
+             @"deviceName" :[UIDevice tt_platformString],
+             @"token": [NSUserDefaults userToken]?:@""
              };
 }
 

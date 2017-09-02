@@ -21,6 +21,7 @@
 		2E2A36A71D5F77BD00F68072 /* TTHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A369F1D5F77BD00F68072 /* TTHTTPClient.m */; };
 		2E2A36A81D5F77BD00F68072 /* TTOldService.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2A36A11D5F77BD00F68072 /* TTOldService.m */; };
 		2E2E6BB81DC8A28D00D595A2 /* PINCache+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E2E6BB71DC8A28D00D595A2 /* PINCache+RACSignalSupport.m */; };
+		7B2B3B551F5A64C3003D1DF1 /* UIDevice+TTNetworkingMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2B3B541F5A64C3003D1DF1 /* UIDevice+TTNetworkingMethods.m */; };
 		8A7D758B699529B36F80982A /* libPods-TTNetwork.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CBC90CE85DEE93121397C7D2 /* libPods-TTNetwork.a */; };
 /* End PBXBuildFile section */
 
@@ -53,6 +54,8 @@
 		2E2E6BB71DC8A28D00D595A2 /* PINCache+RACSignalSupport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "PINCache+RACSignalSupport.m"; sourceTree = "<group>"; };
 		718E454CAEE99316AD181669 /* Pods-TTNetwork.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTNetwork.release.xcconfig"; path = "Pods/Target Support Files/Pods-TTNetwork/Pods-TTNetwork.release.xcconfig"; sourceTree = "<group>"; };
 		7B2B3B521F5A5AD6003D1DF1 /* TTNetwork-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TTNetwork-Prefix.pch"; sourceTree = "<group>"; };
+		7B2B3B531F5A64C3003D1DF1 /* UIDevice+TTNetworkingMethods.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIDevice+TTNetworkingMethods.h"; sourceTree = "<group>"; };
+		7B2B3B541F5A64C3003D1DF1 /* UIDevice+TTNetworkingMethods.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIDevice+TTNetworkingMethods.m"; sourceTree = "<group>"; };
 		7C1CE104A5E910EFA841B873 /* Pods-TTNetwork.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TTNetwork.debug.xcconfig"; path = "Pods/Target Support Files/Pods-TTNetwork/Pods-TTNetwork.debug.xcconfig"; sourceTree = "<group>"; };
 		CBC90CE85DEE93121397C7D2 /* libPods-TTNetwork.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-TTNetwork.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -116,6 +119,8 @@
 		2E2A36931D5F77AC00F68072 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				7B2B3B531F5A64C3003D1DF1 /* UIDevice+TTNetworkingMethods.h */,
+				7B2B3B541F5A64C3003D1DF1 /* UIDevice+TTNetworkingMethods.m */,
 				2E2E6BB61DC8A28D00D595A2 /* PINCache+RACSignalSupport.h */,
 				2E2E6BB71DC8A28D00D595A2 /* PINCache+RACSignalSupport.m */,
 				2E2A36961D5F77BD00F68072 /* TTAPIModel.h */,
@@ -284,6 +289,7 @@
 				2E2A36A51D5F77BD00F68072 /* TTAPIURL.m in Sources */,
 				2E2A36A81D5F77BD00F68072 /* TTOldService.m in Sources */,
 				2E2A367E1D5F777B00F68072 /* main.m in Sources */,
+				7B2B3B551F5A64C3003D1DF1 /* UIDevice+TTNetworkingMethods.m in Sources */,
 				2E2A36A31D5F77BD00F68072 /* TTAPIModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

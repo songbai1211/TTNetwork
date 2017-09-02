@@ -23,10 +23,16 @@
 {
     self = [super init];
     if (self) {
+        [self setUp];
         [self setUpCommand];
         [self setUpSubscribe];
     }
     return self;
+}
+
+- (void)setUp
+{
+    
 }
 
 - (void)setUpCommand

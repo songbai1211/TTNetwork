@@ -6,7 +6,7 @@
 //  Copyright © 2016年 oyxc. All rights reserved.
 //
 
-#import <JSONModel/JSONModel.h>
+#import "NSObject+YYModel.h"
 
 typedef NS_ENUM(NSInteger, TTNetWorkState){
     TTNetWorkStateOK = 200,         //正常
@@ -17,7 +17,7 @@ typedef NS_ENUM(NSInteger, TTNetWorkState){
 
 @end
 
-@interface TTAPIModel : JSONModel
+@interface TTAPIModel : NSObject
 
 /**
  *  状态值

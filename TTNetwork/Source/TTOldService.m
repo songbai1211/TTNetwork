@@ -11,6 +11,7 @@
 #import "TTAPIBaseModel.h"
 #import "TTAPIParamsGenerator.h"
 #import "PINCache+RACSignalSupport.h"
+#import <AFNetworking/AFNetworking.h>
 
 static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
 
@@ -31,7 +32,9 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
     if (self) {
         self.ttServiceSuccessHanlder = ^(id<RACSubscriber> subscriber, id responseObject) {
             if ([responseObject isKindOfClass:[NSDictionary class]]) {
-                TTAPIBaseModel *baseModel = [[TTAPIBaseModel alloc] initWithDictionary:responseObject error:nil];
+                
+                TTAPIBaseModel *baseModel = [TTAPIBaseModel yy_modelWithDictionary:responseObject];
+                
                 if (baseModel.status.code.integerValue == TTNetWorkStateOK) {
                     [subscriber sendNext:responseObject];
                     [subscriber sendCompleted];
@@ -56,22 +59,17 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
     return [self RequsetHttpType:TTHTTPMethodGET params:params methodName:methodName];
 }
 
-- (RACSignal *)rac_PostWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
-{
-    return [self RequsetHttpType:TTHTTPMethodPOST params:params methodName:methodName];
-}
-
-- (RACSignal *)rac_PostWithParams:(NSDictionary *)params  methodName:(NSString * )methodName needCache:(BOOL)needCache
+- (RACSignal *)rac_GetWithParams:(NSDictionary *)params  methodName:(NSString * )methodName needCache:(BOOL)needCache
 {
     if (!needCache) {
-        return [self rac_PostWithParams:params methodName:methodName];
+        return [self rac_GetWithParams:params methodName:methodName];
     }
     
     NSString *cacheKey = [TTAPIParamsGenerator cacheKeyGenerator:params methodName:methodName];
     
     RACSignal *cacheSignal = [[[TTOldService cacheManager] cacheObjectForKey:cacheKey] catchTo:[RACSignal empty]];
-
-    RACSignal *remoteSignal = [[self rac_PostWithParams:params methodName:methodName] flattenMap:^__kindof RACSignal * _Nullable(id  _Nullable value) {
+    
+    RACSignal *remoteSignal = [[self rac_GetWithParams:params methodName:methodName] flattenMap:^__kindof RACSignal * _Nullable(id  _Nullable value) {
         if (value) {
             [[TTOldService cacheManager]  setObject:value forKey:cacheKey block:^(PINCache * _Nonnull cache, NSString * _Nonnull key, id  _Nullable object) {
                 
@@ -81,6 +79,34 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
     }];
     
     return [RACSignal merge:@[[cacheSignal takeUntil:remoteSignal], remoteSignal]];
+}
+
+- (RACSignal *)rac_PostWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
+{
+    return [self RequsetHttpType:TTHTTPMethodPOST params:params methodName:methodName];
+}
+
+- (RACSignal *)rac_HeadWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
+{
+    return [self RequsetHttpType:TTHTTPMethodHEAD params:params methodName:methodName];
+
+}
+
+- (RACSignal *)rac_DeleteWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
+{
+    return [self RequsetHttpType:TTHTTPMethodDELETE params:params methodName:methodName];
+}
+
+- (RACSignal *)rac_PutWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
+{
+    return [self RequsetHttpType:TTHTTPMethodPUT params:params methodName:methodName];
+
+}
+
+
+- (RACSignal *)rac_PatchWithParams:(NSDictionary *)params  methodName:(NSString * )methodName
+{
+    return [self RequsetHttpType:TTHTTPMethodPATCH params:params methodName:methodName];
 }
 
 - (RACSignal *)RequsetHttpType:(TTHTTPMethodType)httpType params:(NSDictionary *)params  methodName:(NSString * )methodName
@@ -107,6 +133,55 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
     }];
 }
 
+- (RACSignal *)uploadJPEGImgae:(UIImage *)image methodName:(NSString *)methodName
+{
+    return [self uploadJPEGImgae:image quality:0.7 methodName:methodName];
+}
+
+- (RACSignal *)uploadJPEGImgae:(UIImage *)image quality:(CGFloat)quality methodName:(NSString *)methodName
+{
+    return [[self rac_PostFileWithBlock:^(id<AFMultipartFormData> formData) {
+        NSData *imgData = UIImageJPEGRepresentation(image, quality);
+        [formData appendPartWithFileData:imgData name:@"file" fileName:@"file.jpeg" mimeType:@"image/jpeg"];
+    } methodName:methodName] map:^id _Nullable(id  _Nullable value) {
+        NSDictionary *body = value[@"body"];
+        return body[@"url"];
+    }];
+}
+
+- (RACSignal *)uploadPNGImgae:(UIImage *)image methodName:(NSString *)methodName
+{
+    return [[self rac_PostFileWithBlock:^(id<AFMultipartFormData> formData) {
+        NSData *imgData = UIImagePNGRepresentation(image);
+        [formData appendPartWithFileData:imgData name:@"file" fileName:@"file.png" mimeType:@"image/png"];
+    } methodName:methodName] map:^id _Nullable(id  _Nullable value) {
+        NSDictionary *body = value[@"body"];
+        return body[@"url"];
+    }];
+}
+
+- (RACSignal *)rac_PostFileWithBlock:(void (^)(id <AFMultipartFormData> formData))block methodName:(NSString * )methodName
+{
+    return [RACSignal createSignal:^RACDisposable *(id<RACSubscriber> subscriber) {
+        NSURLSessionDataTask *dataTask = [[TTHTTPClient shareClient] RequsetFilePOST:methodName parameters:@{} constructingBodyWithBlock:block progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+
+            if (self.ttServiceSuccessHanlder) {
+                self.ttServiceSuccessHanlder(subscriber, responseObject);
+            }
+            
+        } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+            
+            if (self.ttServiceFailureHanlder) {
+                self.ttServiceFailureHanlder(subscriber, error);
+            }
+        }];
+        
+        return [RACDisposable disposableWithBlock:^{
+            [dataTask cancel];
+        }];
+    }];
+}
+
 
 #pragma mark -- Setter && Getter
 + (PINCache *)cacheManager
@@ -120,6 +195,11 @@ static NSString *const TTOldServiceErrorDomain = @"TTOldServiceErrorDomain";
         cache.diskCache.ageLimit = 60*60*24*7;
     });
     return cache;
+}
+
+- (void)dealloc
+{
+    NSLog(@"dealloc --- Service %@", NSStringFromClass([self class]));
 }
 
 @end

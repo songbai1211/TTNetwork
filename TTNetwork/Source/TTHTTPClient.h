@@ -24,4 +24,11 @@ typedef NS_ENUM(NSInteger, TTHTTPMethodType) {
 
 - (nullable NSURLSessionDataTask *)RequsetHttpType:(TTHTTPMethodType)httpType params:(nullable NSDictionary *)params  methodName:(nullable  NSString * )methodName success:(nullable void (^)(NSURLSessionDataTask * _Nullable task, id _Nullable responseObject))success failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nullable error))failure;
 
+- (nullable NSURLSessionDataTask *)RequsetFilePOST:(NSString *_Nullable)URLString
+                             parameters:(nullable id)parameters
+              constructingBodyWithBlock:(nullable void (^)(id   <AFMultipartFormData> _Nullable formData))block
+                               progress:(nullable void (^)(NSProgress * _Nullable uploadProgress))uploadProgress
+                                success:(nullable void (^)(NSURLSessionDataTask * _Nullable task, id _Nullable responseObject))success
+                                failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nullable error))failure;
+
 @end

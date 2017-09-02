@@ -8,11 +8,11 @@
 
 #import <Foundation/Foundation.h>
 
-
 @interface TTBaseViewModel : NSObject
 
 @property (nonatomic, strong, readonly) RACSubject *errors;
 
+- (void)setUp;
 - (void)setUpCommand;
 - (void)setUpSubscribe;
 

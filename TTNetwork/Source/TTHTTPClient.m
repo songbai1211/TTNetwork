@@ -35,6 +35,9 @@
 {
     self = [super initWithBaseURL:[NSURL URLWithString:NHCBaseURL]];
     if (self) {
+        
+        self.requestSerializer.timeoutInterval = 30;
+//        self.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/plain", nil];
         [RACObserve(self, activityCount) subscribeNext:^(NSNumber *activityCount) {
             if (activityCount.integerValue>0) {
                 [[UIApplication sharedApplication] setNetworkActivityIndicatorVisible:YES];
@@ -96,10 +99,12 @@
         
        if (error) {
            if (failure) {
+               DLog(@"%@---%@---%@---%@", request.URL, request.allHTTPHeaderFields, params, [error localizedDescription]);
                failure(dataTask, error);
            }
        } else {
            if (success) {
+               DLog(@"%@---%@---%@---%@", request.URL, request.allHTTPHeaderFields, params, responseObject);
                success(dataTask, responseObject);
            }
        }
@@ -107,6 +112,34 @@
    }];
     [dataTask resume];
     return dataTask;
+}
+
+- (nullable NSURLSessionDataTask *)RequsetFilePOST:(NSString *_Nullable)URLString
+                                        parameters:(nullable id)parameters
+                         constructingBodyWithBlock:(nullable void (^)(id   <AFMultipartFormData> _Nullable formData))block
+                                          progress:(nullable void (^)(NSProgress * _Nullable uploadProgress))uploadProgress
+                                           success:(nullable void (^)(NSURLSessionDataTask * _Nullable task, id _Nullable responseObject))success
+                                           failure:(nullable void (^)(NSURLSessionDataTask * _Nullable task, NSError * _Nullable error))failure
+{
+    @synchronized(self){
+        self.activityCount++;
+    }
+    
+    return [self POST:URLString parameters:parameters constructingBodyWithBlock:block progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+        @synchronized(self) {
+            self.activityCount = MAX(_activityCount - 1, 0);
+        }
+        
+        DLog(@"FilePost %@", responseObject);
+        success(task, responseObject);
+    } failure:^(NSURLSessionDataTask * _Nullable task, NSError * _Nonnull error) {
+        @synchronized(self) {
+            self.activityCount = MAX(_activityCount - 1, 0);
+        }
+        
+        DLog(@"FilePost %@", [error localizedDescription]);
+        failure(task, error);
+    }];
 }
 
 #pragma mark --  Setter && Getter

@@ -6,11 +6,11 @@
 //  Copyright © 2016年 oyxc. All rights reserved.
 //
 
-#import <JSONModel/JSONModel.h>
 #import "TTAPIModel.h"
+#import "NSObject+YYModel.h"
 
-@interface TTAPIBaseModel : JSONModel
+@interface TTAPIBaseModel : NSObject
 
-@property (nonatomic, copy) TTAPIModel *status;
+@property (nonatomic, strong) TTAPIModel *status;
 
 @end
